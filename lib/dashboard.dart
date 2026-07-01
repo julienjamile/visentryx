@@ -70,7 +70,6 @@ class DashboardScreen extends StatelessWidget {
 }
 
 //This has a button that puts you back to login page.
-//This is the top bar, every page uses this blueprint.
 class TopBar extends StatelessWidget implements PreferredSizeWidget{
   @override
   Size get preferredSize => const Size.fromHeight(80.0);
