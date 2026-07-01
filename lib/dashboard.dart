@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:visentryx/main.dart';
 import 'package:visentryx/students.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class DashboardScreen extends StatelessWidget {
   @override
@@ -47,7 +48,12 @@ class DashboardScreen extends StatelessWidget {
                           StudentAlertWidget(name: "Student4", section: "Grade 19-D", status: "On Track", time: "Yesterday", note: "STATUS IMPROVED"),
                         ],
                       ),
-                    )
+                    ),
+                    CaseResolutionChart(
+                        cases: 100,
+                        pending: 33,
+                        resolved: 33,
+                        progress: 33)
                   ],
                 ),
               ),
@@ -298,6 +304,75 @@ class StudentAlertsTopWidget extends StatelessWidget {
             child: Text("View All"),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class CaseResolutionChart extends StatelessWidget {
+  final int cases;
+  final int pending;
+  final int resolved;
+  final int progress;
+
+  const CaseResolutionChart ({
+    required this.cases, required this.pending, required this.resolved, required this.progress
+  });
+
+  Widget _buildLegendItem(Color color, String label) {
+    return Row(
+      children: [
+        Container(
+          width: 12,
+          height: 12,
+          decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(2)),
+        ),
+        const SizedBox(width: 6),
+        Text(label, style: const TextStyle(fontSize: 12)),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 270,
+      child: Card(
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(color: Colors.grey.shade200),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Case Resolution", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Expanded(
+                child: PieChart(
+                  PieChartData(
+                    sectionsSpace: 10,
+                    centerSpaceRadius: 30, // This creates the "donut" hole
+                    sections: [
+                      PieChartSectionData(color: Colors.blue, value: pending/cases, title: ('${pending/cases*100}%'), radius: 50, titleStyle: TextStyle(fontSize: 12, color: Colors.black)),
+                      PieChartSectionData(color: Colors.orange, value: progress/cases, title: ('${progress/cases*100}%'), radius: 50, titleStyle: TextStyle(fontSize: 12, color: Colors.black)),
+                      PieChartSectionData(color: Colors.green, value: resolved/cases, title: ('${resolved/cases*100}%'), radius: 50, titleStyle: TextStyle(fontSize: 12, color: Colors.black)),
+                    ],
+                  ),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildLegendItem(Colors.blue, "Pending"),
+                  _buildLegendItem(Colors.orange, "In Progress"),
+                  _buildLegendItem(Colors.green, "Resolved"),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
