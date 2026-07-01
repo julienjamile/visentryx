@@ -14,21 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
+        fontFamily: 'Inter',
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
@@ -66,29 +52,21 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: .center,
-          children: [
-            TitleWidget()
-          ],
-        ),
-      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TitleWidget(),
+          WelcomeBackWidget(),
+          LoginInputWidget(
+            label: "EMAIL ADDRESS",
+          ),
+          LoginInputWidget(
+            label: "PASSWORD",
+          ),
+          LoginButtonWidget()
+        ]
+      )
     );
   }
 }
@@ -96,16 +74,143 @@ class _MyHomePageState extends State<MyHomePage> {
 class TitleWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Image.asset('assets/images/front_icon.png'),
-        Text(
-          "Visentryx",
-          style: TextStyle(
-            fontFamily: ""
+    return Center(
+      child: Padding(
+          padding: EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              Image.asset('assets/images/front_icon.png'),
+              Text(
+                "Visentryx",
+                style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 24,
+                    fontWeight: FontWeight.w800
+                ),
+              ),
+              Text(
+                "Student Monitoring System",
+                style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w300,
+                    color: Color.fromRGBO(95, 99, 104, 1)
+                ),
+              )
+            ],
           ),
+      )
+    );
+  }
+}
+
+class WelcomeBackWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+                "Welcome back",
+                style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 24,
+                    fontWeight: FontWeight.w800
+                )
+            ),
+            Text(
+                "Please enter your details to sign in.",
+                style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 12,
+                    fontWeight: FontWeight.w300
+                ))
+          ],
+        ),
+    );
+  }
+}
+
+class LoginInputWidget extends StatefulWidget {
+  final String label;
+
+  const LoginInputWidget({
+    required this.label
+  });
+
+  @override
+  _LoginInputWidgetState createState() => _LoginInputWidgetState();
+}
+class _LoginInputWidgetState extends State<LoginInputWidget> {
+  final TextEditingController _controller = TextEditingController();
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(padding: EdgeInsets.all(10),
+    child: Column(
+        children: [
+          TextFormField(
+            controller: _controller,
+            decoration: InputDecoration(
+                labelText: widget.label,
+                filled: true,
+                fillColor: Colors.white,
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: Colors.grey.shade300)
+                ),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Colors.blue, width: 2)
+                )
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class LoginButtonWidget extends StatefulWidget {
+  @override
+  _LoginButtonWidgetState createState() => _LoginButtonWidgetState();
+}
+class _LoginButtonWidgetState extends State<LoginButtonWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(padding: EdgeInsets.all(20),
+        child: ElevatedButton(
+        onPressed: () => {
+
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF1877F2),
+          foregroundColor: Colors.white,
+          minimumSize: const Size(double.infinity, 56),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          elevation: 0,
+        ),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "Sign In",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(width: 8),
+            Icon(Icons.arrow_forward),
+          ],
+          )
         )
-      ],
     );
   }
 }
