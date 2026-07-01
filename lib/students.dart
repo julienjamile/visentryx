@@ -5,11 +5,7 @@ class StudentsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          title: Text("Second Screen"),
-          automaticallyImplyLeading: false,
-        automaticallyImplyActions: false
-      ),
+      appBar: TopBar(),
       body: Center(
         child: ElevatedButton(
           onPressed: () {

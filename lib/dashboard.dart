@@ -14,6 +14,7 @@ class DashboardScreen extends StatelessWidget {
               child: Padding(padding: EdgeInsetsGeometry.all(16),
                 child: Column(
                   children: [
+                    //The only parameter you need to change here is value, as the rest are static.
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -36,6 +37,8 @@ class DashboardScreen extends StatelessWidget {
                         side: BorderSide(color: Colors.grey.shade200),
                       ),
                       child: Column(
+                        //Here are the student alerts, you can see how it repeats, try to find code for the back end that inputs all the info of the latest updated students.
+                        //All parameters are string, so if its a integer, make sure to convert.
                         children: [
                           StudentAlertsTopWidget(update: "12m"),
                           Divider(height: 1, color: Colors.grey.shade200),
@@ -49,6 +52,7 @@ class DashboardScreen extends StatelessWidget {
                         ],
                       ),
                     ),
+                    // Julien, this is the pie chart, only put the number of each case, and "cases" here mean total. They auto divide to the pie chart.
                     CaseResolutionChart(
                         cases: 100,
                         pending: 33,
@@ -65,6 +69,8 @@ class DashboardScreen extends StatelessWidget {
   }
 }
 
+//This has a button that puts you back to login page.
+//This is the top bar, every page uses this blueprint.
 class TopBar extends StatelessWidget implements PreferredSizeWidget{
   @override
   Size get preferredSize => const Size.fromHeight(80.0);
@@ -125,6 +131,8 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget{
   }
 }
 
+//This is the navigation bar in the bottom.
+//This is also the blueprint where all pages will get their navigation buttons.
 class BottomBar extends StatelessWidget {
   final int selectedIndex;
 
@@ -172,6 +180,8 @@ class BottomBar extends StatelessWidget {
   }
 }
 
+//This is the blueprint of each card in the totals group.
+//The four Totals I mean.
 class TotalsCardWidget extends StatelessWidget {
   final String label;
   final String icon;
@@ -226,6 +236,7 @@ class TotalsCardWidget extends StatelessWidget {
   }
 }
 
+//This is an instance/bluepring of each student alert.
 class StudentAlertWidget extends StatelessWidget {
   final String name;
   final String section;
@@ -280,6 +291,8 @@ class StudentAlertWidget extends StatelessWidget {
   }
 }
 
+//This is the very top of the student alert widget.
+//There's a button here(view all) that takes you to student page.
 class StudentAlertsTopWidget extends StatelessWidget {
   final String update;
   const StudentAlertsTopWidget({required this.update});
@@ -299,7 +312,12 @@ class StudentAlertsTopWidget extends StatelessWidget {
             ],
           ),
           ElevatedButton(
-            onPressed: () {}, // Add your navigation here
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => StudentsScreen()),
+              );
+            },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.blue, foregroundColor: Colors.white),
             child: Text("View All"),
           ),
@@ -309,6 +327,7 @@ class StudentAlertsTopWidget extends StatelessWidget {
   }
 }
 
+//Pie Chart Code.
 class CaseResolutionChart extends StatelessWidget {
   final int cases;
   final int pending;
