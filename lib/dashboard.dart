@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:visentryx/main.dart';
+import 'package:visentryx/students.dart';
 
 class DashboardScreen extends StatelessWidget {
   @override
@@ -21,6 +22,15 @@ class DashboardScreen extends StatelessWidget {
               children: [
                 TotalsCardWidget(label: "MONITORING", labelColor: Colors.orange, value: "58", bottomlabel: "Watchlist active", icon: "assets/images/monitoring_dashboard_icon.png"),
                 TotalsCardWidget(label: "ON TRACK", labelColor: Colors.green, value: "1,202", bottomlabel: "Stable Status", icon: "assets/images/ontrack_dashboard_icon.png")
+              ],
+            ),
+            StudentAlertsTopWidget(update: "12m"),
+            Column(
+              children: [
+                StudentAlertWidget(name: "Student1", section: "Grade 11-A", status: "Needs Attention", time: "10:45 AM", note: "ATTENDANCE DROP"),
+                StudentAlertWidget(name: "Student2", section: "Grade 10-C", status: "Monitoring", time: "9: 15 AM", note: "ACADEMIC PROGRESS"),
+                StudentAlertWidget(name: "Student3", section: "Grade 12-B", status: "Needs Attention", time: "Yesterday", note: "BEHAVIORAL REPORT"),
+                StudentAlertWidget(name: "Student4", section: "Grade 19-D", status: "On Track", time: "Yesterday", note: "STATUS IMPROVED"),
               ],
             )
           ],
@@ -143,3 +153,85 @@ class TotalsCardWidget extends StatelessWidget {
   }
 }
 
+class StudentAlertWidget extends StatelessWidget {
+  final String name;
+  final String section;
+  final String status;
+  final String time;
+  final String note;
+
+  const StudentAlertWidget({
+    required this.name,
+    required this.section,
+    required this.status,
+    required this.time,
+    required this.note,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+      child: Row(
+        children: [
+          CircleAvatar(radius: 24, child: Icon(Icons.person)),
+          SizedBox(width: 16),
+          // Name and Section
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(name, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                Text(section, style: TextStyle(color: Colors.grey)),
+              ],
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: status == "Needs Attention" ? Colors.red.shade50 : (status == "Monitoring" ? Colors.orange.shade50 : Colors.green.shade50),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(status, style: TextStyle(fontSize: 10, color: status == "Needs Attention" ? Colors.red : (status == "Monitoring" ? Colors.orange : Colors.green))),
+              ),
+              Text(time, style: TextStyle(fontWeight: FontWeight.bold)),
+              Text(note, style: TextStyle(fontSize: 12, color: Colors.grey)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class StudentAlertsTopWidget extends StatelessWidget {
+  final String update;
+  const StudentAlertsTopWidget({required this.update});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Student Alerts", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              Text("Updated $update ago", style: TextStyle(color: Colors.grey)),
+            ],
+          ),
+          ElevatedButton(
+            onPressed: () {}, // Add your navigation here
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.blue, foregroundColor: Colors.white),
+            child: Text("View All"),
+          ),
+        ],
+      ),
+    );
+  }
+}
