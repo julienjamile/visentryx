@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:visentryx/dashboard.dart';
 
 class StudentsScreen extends StatelessWidget {
   @override
@@ -18,6 +19,7 @@ class StudentsScreen extends StatelessWidget {
           child: Text("Go Back"),
         ),
       ),
+      bottomNavigationBar: BottomBar(selectedIndex: 1),
     );
   }
 }
