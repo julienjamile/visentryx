@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:visentryx/students.dart';
+import 'package:visentryx/dashboard.dart';
 
 void main() {
   runApp(const MyApp());
@@ -41,14 +41,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-  void login() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => StudentsScreen()),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,7 +77,7 @@ class TitleWidget extends StatelessWidget {
                 style: TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 24,
-                    fontWeight: FontWeight.w800
+                    fontWeight: FontWeight.bold
                 ),
               ),
               Text(
@@ -93,7 +85,6 @@ class TitleWidget extends StatelessWidget {
                 style: TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 14,
-                    fontWeight: FontWeight.w300,
                     color: Color.fromRGBO(95, 99, 104, 1)
                 ),
               )
@@ -117,15 +108,14 @@ class WelcomeBackWidget extends StatelessWidget {
                 style: TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 24,
-                    fontWeight: FontWeight.w800
+                    fontWeight: FontWeight.bold
                 )
             ),
             Text(
                 "Please enter your details to sign in.",
                 style: TextStyle(
                     fontFamily: 'Inter',
-                    fontSize: 12,
-                    fontWeight: FontWeight.w300
+                    fontSize: 12
                 ))
           ],
         ),
@@ -159,6 +149,10 @@ class _LoginInputWidgetState extends State<LoginInputWidget> {
           TextFormField(
             controller: _controller,
             decoration: InputDecoration(
+                labelStyle: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 12
+                ),
                 labelText: widget.label,
                 filled: true,
                 fillColor: Colors.white,
@@ -188,7 +182,10 @@ class _LoginButtonWidgetState extends State<LoginButtonWidget> {
     return Padding(padding: EdgeInsets.all(20),
         child: ElevatedButton(
         onPressed: () => {
-
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => DashboardScreen()),
+          )
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF1877F2),
@@ -204,7 +201,11 @@ class _LoginButtonWidgetState extends State<LoginButtonWidget> {
           children: [
             Text(
               "Sign In",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 18,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.bold
+              ),
             ),
             SizedBox(width: 8),
             Icon(Icons.arrow_forward),
