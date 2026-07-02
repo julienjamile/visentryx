@@ -14,7 +14,7 @@ The application provides counselors and school administrators with AI-generated 
 
 ## 👥 Team
 
-**Team Name:** *[Insert Team Name]*
+**Team Name:** *Team Ang*
 
 ### Members
 

@@ -72,8 +72,12 @@ class _MyHomePageState extends State<MyHomePage> {
           LoginInputWidget(
             label: "PASSWORD",
             controller: passwordController,
+            obscureText: true,
           ),
-          LoginButtonWidget()
+          LoginButtonWidget(
+            emailController: emailController,
+            passwordController: passwordController,
+          )
         ]
       )
     );
@@ -141,19 +145,21 @@ class WelcomeBackWidget extends StatelessWidget {
 }
 
 class LoginInputWidget extends StatefulWidget {
-    final String label;
-    final TextEditingController controller;
+  final String label;
+  final TextEditingController controller;
+  final bool obscureText;
 
-    const LoginInputWidget({
+  const LoginInputWidget({
     super.key,
     required this.label,
     required this.controller,
+    this.obscureText = false,
   });
 
   @override
   State<LoginInputWidget> createState() => _LoginInputWidgetState();
-
 }
+
 class _LoginInputWidgetState extends State<LoginInputWidget> {
 
   @override
@@ -162,8 +168,9 @@ class _LoginInputWidgetState extends State<LoginInputWidget> {
     child: Column(
         children: [
           TextFormField(
-            controller: widget.controller,
-            decoration: InputDecoration(
+                controller: widget.controller,
+                obscureText: widget.obscureText,
+                decoration: InputDecoration(
                 labelStyle: TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 12
@@ -188,20 +195,47 @@ class _LoginInputWidgetState extends State<LoginInputWidget> {
 }
 
 class LoginButtonWidget extends StatefulWidget {
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+
+  const LoginButtonWidget({
+    super.key,
+    required this.emailController,
+    required this.passwordController,
+  });
+
   @override
   _LoginButtonWidgetState createState() => _LoginButtonWidgetState();
 }
+
 class _LoginButtonWidgetState extends State<LoginButtonWidget> {
+  final AuthService _authService = AuthService();
+
+  Future<void> _signIn() async {
+    final email = widget.emailController.text.trim();
+    final password = widget.passwordController.text.trim();
+
+    try {
+      await _authService.signIn(email, password);
+      if (!mounted) return;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => DashboardScreen()),
+      );
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Invalid email or password.')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Padding(padding: EdgeInsets.all(20),
-        child: ElevatedButton(
-        onPressed: () => {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => DashboardScreen()),
-          )
-        },
+    return Padding(
+      padding: EdgeInsets.all(20),
+      child: ElevatedButton(
+        onPressed: _signIn,
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF1877F2),
           foregroundColor: Colors.white,
@@ -217,16 +251,16 @@ class _LoginButtonWidgetState extends State<LoginButtonWidget> {
             Text(
               "Sign In",
               style: TextStyle(
-                  fontSize: 18,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.bold
+                fontSize: 18,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.bold,
               ),
             ),
             SizedBox(width: 8),
             Icon(Icons.arrow_forward),
           ],
-          )
-        )
+        ),
+      ),
     );
   }
 }
