@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:visentryx/dashboard.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:visentryx/services/auth_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const MyApp());
 }
 
@@ -15,7 +24,9 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         fontFamily: 'Inter',
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(
+        seedColor: Colors.deepPurple,
+        ),
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -41,6 +52,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,10 +66,12 @@ class _MyHomePageState extends State<MyHomePage> {
           TitleWidget(),
           WelcomeBackWidget(),
           LoginInputWidget(
-            label: "EMAIL ADDRESS",
-          ),
+          label: "EMAIL ADDRESS",
+          controller: emailController,
+),
           LoginInputWidget(
             label: "PASSWORD",
+            controller: passwordController,
           ),
           LoginButtonWidget()
         ]
@@ -124,22 +141,20 @@ class WelcomeBackWidget extends StatelessWidget {
 }
 
 class LoginInputWidget extends StatefulWidget {
-  final String label;
+    final String label;
+    final TextEditingController controller;
 
-  const LoginInputWidget({
-    required this.label
+    const LoginInputWidget({
+    super.key,
+    required this.label,
+    required this.controller,
   });
 
   @override
-  _LoginInputWidgetState createState() => _LoginInputWidgetState();
+  State<LoginInputWidget> createState() => _LoginInputWidgetState();
+
 }
 class _LoginInputWidgetState extends State<LoginInputWidget> {
-  final TextEditingController _controller = TextEditingController();
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +162,7 @@ class _LoginInputWidgetState extends State<LoginInputWidget> {
     child: Column(
         children: [
           TextFormField(
-            controller: _controller,
+            controller: widget.controller,
             decoration: InputDecoration(
                 labelStyle: TextStyle(
                     fontFamily: 'Inter',
