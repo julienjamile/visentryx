@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:visentryx/cases.dart';
 import 'package:visentryx/main.dart';
+import 'package:visentryx/reports.dart';
 import 'package:visentryx/students.dart';
 import 'package:fl_chart/fl_chart.dart';
 
@@ -148,8 +150,10 @@ class BottomBar extends StatelessWidget {
       onTap: (index) {
         if (index != selectedIndex) {
           final List<Widget> pages = [
-            DashboardScreen(),   // Your dashboard widgets
-            StudentsScreen()  // The Students page
+            DashboardScreen(),
+            StudentsScreen(),
+            CasesScreen(),
+            ReportsScreen()
           ];
           Navigator.pushReplacement(
             context,

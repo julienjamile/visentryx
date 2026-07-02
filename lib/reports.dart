@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:visentryx/dashboard.dart';
 import 'package:visentryx/studentprofile.dart';
 
-class StudentsScreen extends StatelessWidget {
+class ReportsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +25,7 @@ class StudentsScreen extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: BottomBar(selectedIndex: 1),
+      bottomNavigationBar: BottomBar(selectedIndex: 3),
     );
   }
 }
@@ -39,7 +39,7 @@ class StudentTopBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: Colors.white,
       toolbarHeight: 80,
-      leadingWidth: 400,
+      leadingWidth: 250,
       leading: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -49,7 +49,7 @@ class StudentTopBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           Padding(padding: EdgeInsetsGeometry.all(10),
             child: Text(
-              "Student Dashboard",
+              "Reports",
               style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 24,
@@ -92,26 +92,26 @@ class _SearchBarState extends State<SearchBar> {
   @override
   Widget build(BuildContext context) {
     return Padding(padding: EdgeInsetsGeometry.all(16),
-      child: TextFormField(
-        controller: _controller,
-        decoration: InputDecoration(
-            labelStyle: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 12
-            ),
-            labelText: "Search by name or ID...",
-            filled: true,
-            fillColor: Colors.white,
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: Colors.grey.shade300)
-            ),
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: Colors.blue, width: 2)
-            )
-        ),
-      )
+        child: TextFormField(
+          controller: _controller,
+          decoration: InputDecoration(
+              labelStyle: TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 12
+              ),
+              labelText: "Search by name or ID...",
+              filled: true,
+              fillColor: Colors.white,
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: Colors.grey.shade300)
+              ),
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: Colors.blue, width: 2)
+              )
+          ),
+        )
     );
   }
 }
