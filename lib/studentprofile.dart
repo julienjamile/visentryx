@@ -29,7 +29,7 @@ class StudentProfileScreen extends StatelessWidget {
             ),
             ReasonWidget(text: "\"Attendance has dropped below 70% this month. Academic performance in Mathematics and History showing significant decline.\"", label: "CRITICAL INDICATOR"),
             AttendanceWidget(),
-            CreateInterventionWidget()
+            CreateInterventionWidget(name: name, section: section, id: id, status: status)
           ],
         ),
       ))
@@ -368,6 +368,15 @@ class AttendanceWidget extends StatelessWidget {
 }
 
 class CreateInterventionWidget extends StatelessWidget {
+  final String name;
+  final String section;
+  final String id;
+  final String status;
+
+  const CreateInterventionWidget ({
+    required this.name, required this.section, required this.id, required this.status
+  });
+  
   @override
   Widget build(BuildContext context) {
     return Padding(padding: EdgeInsets.all(16),
@@ -375,7 +384,7 @@ class CreateInterventionWidget extends StatelessWidget {
           onPressed: () => {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => InterventionformScreen()),
+              MaterialPageRoute(builder: (context) => InterventionformScreen(name: name, section: section, id: id, status: status)),
             )
           },
           style: ElevatedButton.styleFrom(
