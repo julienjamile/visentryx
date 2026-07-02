@@ -162,7 +162,7 @@ class _InterventionCategoryWidgetState extends State<InterventionCategoryWidget>
           const SizedBox(height: 8),
           Row(
             children: [
-              _buildOption(0, "Academic", Icons.circle_outlined), // Replace icon as needed
+              _buildOption(0, "Academic", null),
               const SizedBox(width: 12),
               _buildOption(1, "Behavioral", null),
             ],
@@ -251,7 +251,6 @@ class FollowUpDateWidget extends StatefulWidget {
   @override
   _FollowUpDateWidgetState createState() => _FollowUpDateWidgetState();
 }
-
 class _FollowUpDateWidgetState extends State<FollowUpDateWidget> {
   DateTime selectedDate = DateTime.now();
 

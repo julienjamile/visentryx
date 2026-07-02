@@ -134,21 +134,21 @@ class FilterButtons extends StatelessWidget {
     return Row(
       children: [
         filter_button("All", Colors.blue, Colors.blue.shade50),
-        filter_button("Needs Attention", Colors.red, Colors.red.shade50),
-        filter_button("Monitoring", Colors.orange, Colors.orange.shade50),
-        filter_button("On Track", Colors.green, Colors.green.shade50)
+        filter_button("Critical", Colors.red, Colors.red.shade50),
+        filter_button("Review", Colors.orange, Colors.orange.shade50),
+        filter_button("Resolved", Colors.green, Colors.green.shade50)
       ],
     );
   }
 }
 
-class StudentCard extends StatelessWidget {
+class CaseCard extends StatelessWidget {
   final String name;
   final String status;
   final String id;
   final String section;
 
-  const StudentCard({
+  const CaseCard({
     required this.name,
     required this.status,
     required this.id,
@@ -164,26 +164,17 @@ class StudentCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(color: Colors.grey.shade200),
       ),
-      // ClipRRect ensures the ripple effect stays inside the rounded corners
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
         child: InkWell(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => StudentProfileScreen(
-                name: name,
-                status: status,
-                id: id,
-                section: section,
-              )),
-            );
+            // Open Case
           },
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
               children: [
-                CircleAvatar(radius: 24, backgroundColor: Colors.grey.shade100, child: Icon(Icons.person, color: Colors.grey)),
+                CircleAvatar(radius: 24, backgroundColor: Colors.grey.shade100, child: Icon(Icons.folder, color: Colors.grey)),
                 const SizedBox(width: 16),
                 Expanded(
                   child: Column(
@@ -211,7 +202,7 @@ class StudentCard extends StatelessWidget {
   }
 
   Widget _buildStatusPill(String status) {
-    Color color = status == "Needs Attention" ? Colors.red : (status == "Monitoring" ? Colors.orange : Colors.green);
+    Color color = status == "Critical" ? Colors.red : (status == "Review" ? Colors.orange : Colors.green);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
@@ -225,14 +216,14 @@ class StudentCards extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        StudentCard(name: "Student 1", status: "Needs Attention", id: "44921", section: "Grade 11-A"),
-        StudentCard(name: "Student 2", status: "Monitoring", id: "44922", section: "Grade 10-C"),
-        StudentCard(name: "Student 3", status: "Needs Attention", id: "44923", section: "Grade 12-B"),
-        StudentCard(name: "Student 4", status: "On Track", id: "44924", section: "Grade 9-D"),
-        StudentCard(name: "Student 5", status: "On Track", id: "44925", section: "Grade 11-B"),
-        StudentCard(name: "Student 6", status: "Monitoring", id: "44926", section: "Grade 10-C"),
-        StudentCard(name: "Student 7", status: "Needs Attention", id: "44927", section: "Grade 12-B"),
-        StudentCard(name: "Student 8", status: "Monitoring", id: "44928", section: "Grade 11-C"),
+        CaseCard(name: "Behavioral Case 1", status: "Critical", id: "99321", section: "Grade 11-A"),
+        CaseCard(name: "Academic Review 2", status: "Reviewing", id: "99322", section: "Grade 10-C"),
+        CaseCard(name: "Disciplinary Action 3", status: "Critical", id: "99323", section: "Grade 12-B"),
+        CaseCard(name: "Attendance Issue 4", status: "Resolved", id: "99324", section: "Grade 9-D"),
+        CaseCard(name: "Counseling Session 5", status: "Resolved", id: "99325", section: "Grade 11-B"),
+        CaseCard(name: "Academic Review 1", status: "Reviewing", id: "99326", section: "Grade 10-C"),
+        CaseCard(name: "Disciplinary Action 2", status: "Critical", id: "99327", section: "Grade 12-B"),
+        CaseCard(name: "Counseling Session 4", status: "Reviewing", id: "99328", section: "Grade 11-C"),
       ],
     );
   }
