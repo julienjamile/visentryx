@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:visentryx/dashboard.dart';
+import 'package:visentryx/studentprofile.dart';
 
 class StudentsScreen extends StatelessWidget {
   @override
@@ -168,8 +169,15 @@ class StudentCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         child: InkWell(
           onTap: () {
-            // Add your navigation or action here
-            print("Clicked on $name");
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => StudentProfileScreen(
+                name: name,
+                status: status,
+                id: id,
+                section: section,
+              )),
+            );
           },
           child: Padding(
             padding: const EdgeInsets.all(16.0),
