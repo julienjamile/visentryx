@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:visentryx/cases.dart';
 import 'package:visentryx/main.dart';
-import 'package:visentryx/reports.dart';
 import 'package:visentryx/students.dart';
 import 'package:fl_chart/fl_chart.dart';
 
@@ -152,8 +151,7 @@ class BottomBar extends StatelessWidget {
           final List<Widget> pages = [
             DashboardScreen(),
             StudentsScreen(),
-            CasesScreen(),
-            ReportsScreen()
+            CasesScreen()
           ];
           Navigator.pushReplacement(
             context,
@@ -173,11 +171,7 @@ class BottomBar extends StatelessWidget {
         BottomNavigationBarItem(
           icon: Icon(Icons.assignment),
           label: 'Cases',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.description),
-          label: 'Reports',
-        ),
+        )
       ],
     );
   }
