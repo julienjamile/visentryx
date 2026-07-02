@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:visentryx/interventionform.dart';
 
 class StudentProfileScreen extends StatelessWidget {
   final String name;
@@ -16,17 +17,22 @@ class StudentProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: StudentProfileTopBar(name: name, id: id),
-      body: Column(
-        children: [
-          StudentProfile(name: name, section: section, age: "16", status: status),
-          Row(
-            children: [
-              PercentBarWidget(label: "ATTENDANCE", value: 68, delta: -4, icon: Icons.calendar_today, color: Colors.red),
-              PercentBarWidget(label: "ACADEMIC", value: 74, delta: -2, icon: Icons.grade, color: Colors.orange)
-            ],
-          )
-        ],
-      ),
+      body: SafeArea(child: SingleChildScrollView(
+        child: Column(
+          children: [
+            StudentProfile(name: name, section: section, age: "16", status: status),
+            Row(
+              children: [
+                PercentBarWidget(label: "ATTENDANCE", value: 68, delta: -4, icon: Icons.calendar_today, color: Colors.red),
+                PercentBarWidget(label: "ACADEMIC", value: 74, delta: -2, icon: Icons.grade, color: Colors.orange)
+              ],
+            ),
+            ReasonWidget(text: "\"Attendance has dropped below 70% this month. Academic performance in Mathematics and History showing significant decline.\"", label: "CRITICAL INDICATOR"),
+            AttendanceWidget(),
+            CreateInterventionWidget()
+          ],
+        ),
+      ))
     );
   }
 }
@@ -228,6 +234,175 @@ class PercentBarWidget extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class ReasonWidget extends StatelessWidget {
+  final String text;
+  final String label;
+
+  const ReasonWidget({
+    required this.text,
+    required this.label,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(padding: EdgeInsets.all(16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // The Header Title
+        const Text(
+          "Reason for Status",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 12),
+
+        // The Box with the Red Border
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.red.shade50.withOpacity(0.5), // Light red background
+            borderRadius: BorderRadius.circular(12),
+            border: const Border(
+              left: BorderSide(color: Colors.red, width: 4), // The red side line
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                text,
+                style: const TextStyle(fontSize: 16, height: 1.5, color: Colors.black87),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                label.toUpperCase(),
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red,
+                  letterSpacing: 0.5,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+    );
+  }
+}
+
+class AttendanceWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: Colors.grey.shade200),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text("Attendance Log", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                TextButton(onPressed: () {}, child: const Text("View History")),
+              ],
+            ),
+            const SizedBox(height: 16),
+            _buildAttendanceItem("Oct 24, 2023", "Absent", "No Excuse", Icons.turn_left),
+            Divider(height: 24, color: Colors.grey.shade100),
+            _buildAttendanceItem("Oct 23, 2023", "Late", "15 Minutes", Icons.stop_rounded),
+            Divider(height: 24, color: Colors.grey.shade100),
+            _buildAttendanceItem("Oct 22, 2023", "Present", "", Icons.navigation_rounded),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAttendanceItem(String date, String status, String note, IconData icon) {
+    Color color = status == "Absent" ? Colors.red : (status == "Late" ? Colors.orange : Colors.green);
+
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(color: color.withOpacity(0.05), shape: BoxShape.circle),
+          child: Icon(icon, color: color, size: 20),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(date, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              Text("$status ${note.isNotEmpty ? '• $note' : ''}", style: const TextStyle(color: Colors.grey)),
+            ],
+          ),
+        ),
+        _buildStatusPill(status),
+      ],
+    );
+  }
+
+  Widget _buildStatusPill(String status) {
+    Color color = status == "Absent" ? Colors.red : (status == "Late" ? Colors.orange : Colors.green);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(status.toUpperCase(), style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.bold)),
+    );
+  }
+}
+
+class CreateInterventionWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(padding: EdgeInsets.all(16),
+      child: ElevatedButton(
+          onPressed: () => {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => InterventionformScreen()),
+            )
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF1877F2),
+            foregroundColor: Colors.white,
+            minimumSize: const Size(double.infinity, 56),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            elevation: 0,
+          ),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.add),
+              SizedBox(width: 8),
+              Text(
+                "Create Intervention",
+                style: TextStyle(
+                    fontSize: 18,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.bold
+                ),
+              )
+            ],
+          )
+      )
     );
   }
 }

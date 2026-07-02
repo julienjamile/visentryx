@@ -259,7 +259,6 @@ class StudentAlertWidget extends StatelessWidget {
         children: [
           CircleAvatar(radius: 24, child: Icon(Icons.person)),
           SizedBox(width: 16),
-          // Name and Section
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
