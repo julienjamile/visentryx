@@ -1,38 +1,67 @@
 import 'package:flutter/material.dart';
 import 'package:visentryx/interventionform.dart';
+import 'package:visentryx/services/ai_service.dart';
 
-class StudentProfileScreen extends StatelessWidget {
+class StudentProfileScreen extends StatefulWidget {
   final String name;
   final String status;
   final String id;
   final String section;
 
-
-
   const StudentProfileScreen ({
-   required this.name, required this.status, required this.id, required String this.section
+    required this.name,
+    required this.status,
+    required this.id,
+    required String this.section,
   });
+
+  @override
+  State<StudentProfileScreen> createState() => _StudentProfileScreenState();
+}
+
+class _StudentProfileScreenState extends State<StudentProfileScreen> {
+  late Future<String> _summaryFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _summaryFuture = AiService.generateStudentStatusSummary(
+      name: widget.name,
+      status: widget.status,
+      section: widget.section,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: StudentProfileTopBar(name: name, id: id),
-      body: SafeArea(child: SingleChildScrollView(
-        child: Column(
-          children: [
-            StudentProfile(name: name, section: section, age: "16", status: status),
-            Row(
-              children: [
-                PercentBarWidget(label: "ATTENDANCE", value: 68, delta: -4, icon: Icons.calendar_today, color: Colors.red),
-                PercentBarWidget(label: "ACADEMIC", value: 74, delta: -2, icon: Icons.grade, color: Colors.orange)
-              ],
-            ),
-            ReasonWidget(text: "\"Attendance has dropped below 70% this month. Academic performance in Mathematics and History showing significant decline.\"", label: "CRITICAL INDICATOR"),
-            AttendanceWidget(),
-            CreateInterventionWidget(name: name, section: section, id: id, status: status)
-          ],
+      appBar: StudentProfileTopBar(name: widget.name, id: widget.id),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              StudentProfile(name: widget.name, section: widget.section, age: "16", status: widget.status),
+              Row(
+                children: [
+                  PercentBarWidget(label: "ATTENDANCE", value: 68, delta: -4, icon: Icons.calendar_today, color: Colors.red),
+                  PercentBarWidget(label: "ACADEMIC", value: 74, delta: -2, icon: Icons.grade, color: Colors.orange)
+                ],
+              ),
+              FutureBuilder<String>(
+                future: _summaryFuture,
+                builder: (context, snapshot) {
+                  final text = snapshot.connectionState == ConnectionState.waiting
+                      ? 'Generating summary...'
+                      : snapshot.data ?? 'Gemini placeholder: unable to generate summary.';
+                  return ReasonWidget(text: text, label: 'CRITICAL INDICATOR');
+                },
+              ),
+              AttendanceWidget(),
+              CreateInterventionWidget(name: widget.name, section: widget.section, id: widget.id, status: widget.status)
+            ],
+          ),
         ),
-      ))
+      ),
     );
   }
 }
