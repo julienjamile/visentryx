@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "431105248965",
+    "project_id": "visentryx",
+    "storage_bucket": "visentryx.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:431105248965:android:ff57f1cbbcd93d1f336aac",
+        "android_client_info": {
+          "package_name": "com.example.visentryx"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbLwdqqzZGde8CXoLSpvdByy8UiI2PKro"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
