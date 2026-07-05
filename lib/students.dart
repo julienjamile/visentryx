@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:visentryx/dashboard.dart';
 import 'package:visentryx/studentprofile.dart';
+import 'package:visentryx/services/firestore_service.dart';
 
 class StudentsScreen extends StatelessWidget {
+  final FirestoreService _firestore = FirestoreService();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: StudentTopBar(),
-      body:
-      Column(
+      body: Column(
         children: [
           SearchBar(),
           SafeArea(
@@ -18,14 +20,32 @@ class StudentsScreen extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: StudentCards(),
+            child: StreamBuilder<List<StudentRecord>>(
+              stream: _firestore.studentsStream(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return const Center(child: Text('Unable to load students.'));
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                final students = snapshot.data ?? [];
+                if (students.isEmpty) {
+                  return const Center(child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Text('No students found.'),
+                  ));
+                }
+                return SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: StudentList(students: students),
+                );
+              },
             ),
           ),
         ],
       ),
-      bottomNavigationBar: BottomBar(selectedIndex: 1),
+      bottomNavigationBar: const BottomBar(selectedIndex: 1),
     );
   }
 }
@@ -147,12 +167,24 @@ class StudentCard extends StatelessWidget {
   final String status;
   final String id;
   final String section;
+  final String age;
+  final String criticalIndicator;
+  final int attendancePercent;
+  final int attendanceDelta;
+  final int academicPercent;
+  final int academicDelta;
 
   const StudentCard({
     required this.name,
     required this.status,
     required this.id,
     required this.section,
+    required this.age,
+    required this.criticalIndicator,
+    required this.attendancePercent,
+    required this.attendanceDelta,
+    required this.academicPercent,
+    required this.academicDelta,
   });
 
   @override
@@ -176,6 +208,12 @@ class StudentCard extends StatelessWidget {
                 status: status,
                 id: id,
                 section: section,
+                age: age,
+                criticalIndicator: criticalIndicator,
+                attendancePercent: attendancePercent,
+                attendanceDelta: attendanceDelta,
+                academicPercent: academicPercent,
+                academicDelta: academicDelta,
               )),
             );
           },
@@ -220,20 +258,28 @@ class StudentCard extends StatelessWidget {
   }
 }
 
-class StudentCards extends StatelessWidget {
+class StudentList extends StatelessWidget {
+  final List<StudentRecord> students;
+
+  const StudentList({super.key, required this.students});
+
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [
-        StudentCard(name: "Student 1", status: "Needs Attention", id: "44921", section: "Grade 11-A"),
-        StudentCard(name: "Student 2", status: "Monitoring", id: "44922", section: "Grade 10-C"),
-        StudentCard(name: "Student 3", status: "Needs Attention", id: "44923", section: "Grade 12-B"),
-        StudentCard(name: "Student 4", status: "On Track", id: "44924", section: "Grade 9-D"),
-        StudentCard(name: "Student 5", status: "On Track", id: "44925", section: "Grade 11-B"),
-        StudentCard(name: "Student 6", status: "Monitoring", id: "44926", section: "Grade 10-C"),
-        StudentCard(name: "Student 7", status: "Needs Attention", id: "44927", section: "Grade 12-B"),
-        StudentCard(name: "Student 8", status: "Monitoring", id: "44928", section: "Grade 11-C"),
-      ],
+      children: students.map((student) {
+        return StudentCard(
+          name: student.fullName,
+          status: student.status,
+          id: student.studentId,
+          section: student.section,
+          age: student.age.toString(),
+          criticalIndicator: student.criticalIndicator,
+          attendancePercent: student.attendancePercent,
+          attendanceDelta: student.attendanceDelta,
+          academicPercent: student.academicPercent,
+          academicDelta: student.academicDelta,
+        );
+      }).toList(),
     );
   }
 }

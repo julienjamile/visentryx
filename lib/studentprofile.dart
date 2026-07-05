@@ -7,12 +7,24 @@ class StudentProfileScreen extends StatefulWidget {
   final String status;
   final String id;
   final String section;
+  final String age;
+  final String criticalIndicator;
+  final int attendancePercent;
+  final int attendanceDelta;
+  final int academicPercent;
+  final int academicDelta;
 
   const StudentProfileScreen ({
     required this.name,
     required this.status,
     required this.id,
-    required String this.section,
+    required this.section,
+    required this.age,
+    required this.criticalIndicator,
+    required this.attendancePercent,
+    required this.attendanceDelta,
+    required this.academicPercent,
+    required this.academicDelta,
   });
 
   @override
@@ -29,6 +41,10 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
       name: widget.name,
       status: widget.status,
       section: widget.section,
+      studentId: widget.id,
+      attendancePercent: widget.attendancePercent,
+      academicPercent: widget.academicPercent,
+      criticalIndicator: widget.criticalIndicator,
     );
   }
 
@@ -40,11 +56,11 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              StudentProfile(name: widget.name, section: widget.section, age: "16", status: widget.status),
+              StudentProfile(name: widget.name, section: widget.section, age: widget.age, status: widget.status),
               Row(
                 children: [
-                  PercentBarWidget(label: "ATTENDANCE", value: 68, delta: -4, icon: Icons.calendar_today, color: Colors.red),
-                  PercentBarWidget(label: "ACADEMIC", value: 74, delta: -2, icon: Icons.grade, color: Colors.orange)
+                  PercentBarWidget(label: "ATTENDANCE", value: widget.attendancePercent, delta: widget.attendanceDelta, icon: Icons.calendar_today, color: Colors.red),
+                  PercentBarWidget(label: "ACADEMIC", value: widget.academicPercent, delta: widget.academicDelta, icon: Icons.grade, color: Colors.orange)
                 ],
               ),
               FutureBuilder<String>(
@@ -52,7 +68,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                 builder: (context, snapshot) {
                   final text = snapshot.connectionState == ConnectionState.waiting
                       ? 'Generating summary...'
-                      : snapshot.data ?? 'Gemini placeholder: unable to generate summary.';
+                      : snapshot.data ?? widget.criticalIndicator;
                   return ReasonWidget(text: text, label: 'CRITICAL INDICATOR');
                 },
               ),

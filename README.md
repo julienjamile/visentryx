@@ -36,7 +36,6 @@ Visentryx is a prototype mobile application that leverages Google technologies t
 - 💙 **Flutter** — Cross-platform mobile application development
 - 🔥 **Firebase Authentication** — Secure user authentication
 - 📂 **Cloud Firestore** — Real-time cloud database
-- ☁️ **Firebase Cloud Storage** — File and media storage
 - ✨ **Google Gemini API** — AI-generated student summaries and insights
 
 ---

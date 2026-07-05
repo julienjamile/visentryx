@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:visentryx/dashboard.dart';
-import 'package:visentryx/studentprofile.dart';
+import 'package:visentryx/services/firestore_service.dart';
 
 class CasesScreen extends StatelessWidget {
+  final FirestoreService _firestore = FirestoreService();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,9 +20,27 @@ class CasesScreen extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: StudentCards(),
+            child: StreamBuilder<List<CaseRecord>>(
+              stream: _firestore.casesStream(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return const Center(child: Text('Unable to load cases.'));
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                final cases = snapshot.data ?? [];
+                if (cases.isEmpty) {
+                  return const Center(child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Text('No cases found.'),
+                  ));
+                }
+                return SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: CaseList(cases: cases),
+                );
+              },
             ),
           ),
         ],
@@ -211,20 +231,22 @@ class CaseCard extends StatelessWidget {
   }
 }
 
-class StudentCards extends StatelessWidget {
+class CaseList extends StatelessWidget {
+  final List<CaseRecord> cases;
+
+  const CaseList({super.key, required this.cases});
+
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [
-        CaseCard(name: "Behavioral Case 1", status: "Critical", id: "99321", section: "Grade 11-A"),
-        CaseCard(name: "Academic Review 2", status: "Reviewing", id: "99322", section: "Grade 10-C"),
-        CaseCard(name: "Disciplinary Action 3", status: "Critical", id: "99323", section: "Grade 12-B"),
-        CaseCard(name: "Attendance Issue 4", status: "Resolved", id: "99324", section: "Grade 9-D"),
-        CaseCard(name: "Counseling Session 5", status: "Resolved", id: "99325", section: "Grade 11-B"),
-        CaseCard(name: "Academic Review 1", status: "Reviewing", id: "99326", section: "Grade 10-C"),
-        CaseCard(name: "Disciplinary Action 2", status: "Critical", id: "99327", section: "Grade 12-B"),
-        CaseCard(name: "Counseling Session 4", status: "Reviewing", id: "99328", section: "Grade 11-C"),
-      ],
+      children: cases.map((caseRecord) {
+        return CaseCard(
+          name: caseRecord.title,
+          status: caseRecord.status,
+          id: caseRecord.caseId,
+          section: caseRecord.caseType,
+        );
+      }).toList(),
     );
   }
 }

@@ -8,23 +8,28 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
-  print('Starting Firestore importer...');
-
   try {
+    WidgetsFlutterBinding.ensureInitialized();
+
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    print('Firebase initialized');
+
+    print('Starting Firestore importer...');
+
     final jsonString = await rootBundle.loadString('assets/data/students.json');
+    print('JSON loaded successfully, length=${jsonString.length}');
+
     final Map<String, dynamic> jsonData = jsonDecode(jsonString) as Map<String, dynamic>;
 
     final students = (jsonData['students'] as List<dynamic>?)?.cast<Map<String, dynamic>>() ?? <Map<String, dynamic>>[];
     final cases = (jsonData['cases'] as List<dynamic>?)?.cast<Map<String, dynamic>>() ?? <Map<String, dynamic>>[];
     final interventions = (jsonData['interventions'] as List<dynamic>?)?.cast<Map<String, dynamic>>() ?? <Map<String, dynamic>>[];
 
-    print('Loaded ${students.length} students, ${cases.length} cases, ${interventions.length} interventions.');
+    print('Number of students loaded: ${students.length}');
+    print('Number of cases loaded: ${cases.length}');
+    print('Number of interventions loaded: ${interventions.length}');
 
     final WriteBatch batch = FirebaseFirestore.instance.batch();
 
@@ -46,7 +51,9 @@ Future<void> main() async {
       batch.set(interventionRef, intervention);
     }
 
+    print('Before batch.commit()');
     await batch.commit();
+    print('After batch.commit()');
     print('Firestore import completed successfully.');
   } catch (error, stackTrace) {
     print('Firestore import failed: $error');

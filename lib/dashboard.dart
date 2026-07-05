@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:visentryx/cases.dart';
 import 'package:visentryx/main.dart';
+import 'package:visentryx/services/firestore_service.dart';
 import 'package:visentryx/students.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class DashboardScreen extends StatelessWidget {
+  final FirestoreService _firestore = FirestoreService();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,20 +18,34 @@ class DashboardScreen extends StatelessWidget {
               child: Padding(padding: EdgeInsetsGeometry.all(16),
                 child: Column(
                   children: [
-                    //The only parameter you need to change here is value, as the rest are static.
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TotalsCardWidget(label: "TOTAL", value: "1,284", bottomlabel: "Total Students", icon: "assets/images/total_dashboard_icon.png"),
-                        TotalsCardWidget(label: "NEEDS\nATTENTION", labelColor: Colors.red, value: "24", bottomlabel: "Action Required", icon: "assets/images/attention_dashboard_icon.png")
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TotalsCardWidget(label: "MONITORING", labelColor: Colors.orange, value: "58", bottomlabel: "Watchlist active", icon: "assets/images/monitoring_dashboard_icon.png"),
-                        TotalsCardWidget(label: "ON TRACK", labelColor: Colors.green, value: "1,202", bottomlabel: "Stable Status", icon: "assets/images/ontrack_dashboard_icon.png")
-                      ],
+                    StreamBuilder<List<StudentRecord>>(
+                      stream: _firestore.studentsStream(),
+                      builder: (context, snapshot) {
+                        final students = snapshot.data ?? [];
+                        final total = students.length;
+                        final needsAttention = students.where((s) => s.status == 'Needs Attention').length;
+                        final monitoring = students.where((s) => s.status == 'Monitoring').length;
+                        final onTrack = students.where((s) => s.status == 'On Track').length;
+
+                        return Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                TotalsCardWidget(label: "TOTAL", value: total.toString(), bottomlabel: "Total Students", icon: "assets/images/total_dashboard_icon.png"),
+                                TotalsCardWidget(label: "NEEDS\nATTENTION", labelColor: Colors.red, value: needsAttention.toString(), bottomlabel: "Action Required", icon: "assets/images/attention_dashboard_icon.png"),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                TotalsCardWidget(label: "MONITORING", labelColor: Colors.orange, value: monitoring.toString(), bottomlabel: "Watchlist active", icon: "assets/images/monitoring_dashboard_icon.png"),
+                                TotalsCardWidget(label: "ON TRACK", labelColor: Colors.green, value: onTrack.toString(), bottomlabel: "Stable Status", icon: "assets/images/ontrack_dashboard_icon.png"),
+                              ],
+                            ),
+                          ],
+                        );
+                      },
                     ),
                     Card(
                       elevation: 0,
